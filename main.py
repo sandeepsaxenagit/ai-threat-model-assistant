@@ -97,24 +97,30 @@ if submitted:
 
     threats = evaluate_threats(inputs)
 
+    # Display Basic Threats
     if threats["basic"]:
         st.header("🚨 Threats")
         for threat in threats["basic"]:
             st.subheader(threat["threat"])
             st.markdown(f"**Description:** {threat['description']}")
-            st.markdown(f"**OWASP:** {threat['owasp']}  \n**MITRE ATLAS:** {threat['mitre']}  \n**NIST:** {', '.join(threat['nist'])}")
+            st.markdown(f"**OWASP:** {threat['owasp']}")
+            st.markdown(f"**MITRE ATLAS:** {threat['mitre']}")
+            st.markdown(f"**NIST:** {', '.join(threat['nist'])}")
             st.markdown(f"**Mitigation:** {threat['mitigation']}")
             st.markdown(f"**Compliance Risks:** {', '.join(threat['compliance'])}")
             st.markdown("**Attack Path:**")
             for step in threat["attack_path"]:
                 st.markdown(f"⬇️ {step}")
 
+    # Display Threat Chains
     if threats["chained"]:
         st.header("🔗 Threat Chain")
         for threat in threats["chained"]:
             st.subheader(threat["threat"])
             st.markdown(f"**Description:** {threat['description']}")
-            st.markdown(f"**OWASP:** {threat['owasp']}  \n**MITRE ATLAS:** {threat['mitre']}  \n**NIST:** {', '.join(threat['nist'])}")
+            st.markdown(f"**OWASP:** {threat['owasp']}")
+            st.markdown(f"**MITRE ATLAS:** {threat['mitre']}")
+            st.markdown(f"**NIST:** {', '.join(threat['nist'])}")
             st.markdown(f"**Mitigation:** {threat['mitigation']}")
             st.markdown(f"**Compliance Risks:** {', '.join(threat['compliance'])}")
             st.markdown("**Attack Path:**")
