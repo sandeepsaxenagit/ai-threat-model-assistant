@@ -258,3 +258,4 @@ def evaluate_threats(inputs):
         "chained": chained_threats
     }
 
+# force commit to update rules_engine on GitHub
