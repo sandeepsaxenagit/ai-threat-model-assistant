@@ -1,0 +1,10 @@
+[theme]
+base = "light"
+
+[server]
+headless = true
+runOnSave = true
+
+[layout]
+wide = true
+
