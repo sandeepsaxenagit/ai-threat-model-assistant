@@ -1,10 +1,13 @@
 import streamlit as st
 from rules_engine import evaluate_threats
+from collections import Counter
+import plotly.graph_objects as go
+import plotly.io as pio
 
 st.set_page_config(page_title="🛡️ AI Threat Modeling Assistant", layout="wide")
 st.title("🛡️ AI Threat Modeling Assistant")
 
-st.markdown("Answer the following to get a threat report:")
+st.markdown("Answer the following to generate your AI threat report:")
 
 with st.form("threat_model_form"):
     st.header("📘 General Info")
@@ -19,7 +22,7 @@ with st.form("threat_model_form"):
 
     st.header("📊 Data")
     training_data = st.multiselect("Training Data Type", ["Public", "Internal", "PII", "PHI", "Synthetic"])
-    external_sources = st.radio("Does it use external sources (e.g. RAG)?", ["Yes", "No"])
+    external_sources = st.radio("Uses external sources (e.g. RAG)?", ["Yes", "No"])
     real_time = st.radio("Real-time inputs during inference?", ["Yes", "No"])
     user_influence = st.radio("Can users influence training or inference data?", ["Yes", "No"])
 
@@ -97,7 +100,9 @@ if submitted:
 
     threats = evaluate_threats(inputs)
 
-    # Display Basic Threats
+    # ========================
+    # 🚨 Display Basic Threats
+    # ========================
     if threats["basic"]:
         st.header("🚨 Threats")
         for threat in threats["basic"]:
@@ -112,7 +117,9 @@ if submitted:
             for step in threat["attack_path"]:
                 st.markdown(f"⬇️ {step}")
 
-    # Display Threat Chains
+    # ==========================
+    # 🔗 Display Threat Chains
+    # ==========================
     if threats["chained"]:
         st.header("🔗 Threat Chain")
         for threat in threats["chained"]:
@@ -126,4 +133,50 @@ if submitted:
             st.markdown("**Attack Path:**")
             for step in threat["attack_path"]:
                 st.markdown(f"⬇️ {step}")
+
+    # =====================================
+    # 📊 NIST CIA + Abuse Radar Chart
+    # =====================================
+    all_nist = []
+    for t in threats["basic"] + threats["chained"]:
+        all_nist.extend(t["nist"])
+
+    cia_counts = Counter(all_nist)
+    categories = ['Confidentiality', 'Integrity', 'Availability', 'Abuse']
+    values = [cia_counts.get(c, 0) for c in categories]
+    values += values[:1]
+
+    radar = go.Figure()
+    radar.add_trace(go.Scatterpolar(
+        r=values,
+        theta=categories + [categories[0]],
+        fill='toself',
+        name='CIA+Abuse',
+        line=dict(color='royalblue')
+    ))
+    radar.update_layout(
+        title="🔐 NIST CIA + Abuse Mapping",
+        polar=dict(radialaxis=dict(visible=True)),
+        showlegend=False
+    )
+    st.plotly_chart(radar)
+
+    # =====================================
+    # 📊 MITRE ATLAS Tactic Frequency Chart
+    # =====================================
+    mitre_counts = Counter()
+    for t in threats["basic"] + threats["chained"]:
+        mitre_counts[t["mitre"]] += 1
+
+    mitre_fig = go.Figure([go.Bar(
+        x=list(mitre_counts.keys()),
+        y=list(mitre_counts.values()),
+        marker_color='darkred'
+    )])
+    mitre_fig.update_layout(
+        title="⚔️ MITRE ATLAS Tactic Frequency",
+        xaxis_title="Tactic",
+        yaxis_title="Count"
+    )
+    st.plotly_chart(mitre_fig)
 
