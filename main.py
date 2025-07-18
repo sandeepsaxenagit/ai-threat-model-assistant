@@ -125,29 +125,6 @@ with st.form("threat_model_form"):
     st.session_state.model_source = st.selectbox("Model Source", ["Open-source", "Pretrained (Vendor)", "Fine-tuned", "Proprietary"], index=["Open-source", "Pretrained (Vendor)", "Fine-tuned", "Proprietary"].index(st.session_state.model_source), help="Where did your base model originate.")
     st.session_state.model_updates = st.radio("Is the model updated regularly?", ["Yes", "No"], index=0 if st.session_state.model_updates == "Yes" else 1, horizontal=True, help="Does your model undergo continuous training or updates?")
 
-    # --- Issue 4: Model Type and AI Type Mismatch Validation ---
-    if st.session_state.ai_type == "Traditional ML" and \
-       st.session_state.model_type in ["Transformer", "LLM (Generic)", "LLM (Custom/Fine-tuned)"]:
-        st.warning(
-            "⚠️ **Validation Warning:** A '{st.session_state.model_type}' model type is typically not classified under 'Traditional ML'. "
-            "Consider adjusting your AI Type or Model Type for more accurate threat modeling."
-        )
-    elif st.session_state.ai_type == "Generative AI (e.g., Image/Audio Generation)" and \
-         st.session_state.model_type in ["Classifier", "CNN", "LLM (Generic)", "LLM (Custom/Fine-tuned)"]: # Allow LLM types under GenAI, but warn if not common for non-LLM GenAI
-        st.warning(
-            "⚠️ **Validation Warning:** For 'Generative AI (e.g., Image/Audio Generation)', '{st.session_state.model_type}' might not be the most appropriate model type. "
-            "If your Generative AI uses LLMs, select 'Large Language Model (LLM)' as AI Type. Otherwise, consider 'Transformer' or 'Other Custom'."
-        )
-    elif st.session_state.ai_type == "Large Language Model (LLM)" and \
-         st.session_state.model_type not in ["Transformer", "LLM (Generic)", "LLM (Custom/Fine-tuned)"]:
-        st.warning(
-            "⚠️ **Validation Warning:** When 'Large Language Model (LLM)' is selected as AI Type, 'Transformer' or 'LLM' based Model Types are expected."
-        )
-    elif st.session_state.ai_type == "Agentic AI (e.g., Autonomous Agents)" and \
-         st.session_state.model_type not in ["Transformer", "LLM (Generic)", "LLM (Custom/Fine-tuned)", "Other Custom"]: # Allow custom for agents
-        st.warning(
-            "⚠️ **Validation Warning:** For 'Agentic AI', '{st.session_state.model_type}' might not be the most appropriate model type. Consider 'Transformer', 'LLM (Generic)', 'LLM (Custom/Fine-tuned)', or 'Other Custom'."
-        )
             
     st.markdown("---")
     st.header("📊 Data Considerations")
