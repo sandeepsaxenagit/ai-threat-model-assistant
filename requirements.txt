@@ -1,6 +1,8 @@
 streamlit
 plotly
 fpdf
+fpdf2
+reportlab
 matplotlib
 networkx
 
