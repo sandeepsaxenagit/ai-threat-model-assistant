@@ -8,7 +8,7 @@ Unlike LLM-based tools, this engine uses a rule-based approach to produce consis
 
 ---
 
-## 🚀 Why this tool?
+##  Why this tool?
 
 AI systems introduce new and evolving attack surfaces:
 
@@ -28,7 +28,7 @@ This tool bridges that gap using deterministic logic instead of black-box AI.
 
 ---
 
-## 🧠 Key Design Principle
+##  Key Design Principle
 
 This tool is **rule-based, not generative AI**.
 
@@ -66,7 +66,7 @@ This tool is **rule-based, not generative AI**.
 
 ---
 
-## 🏗️ How it works
+## How it works
 
 1. User provides system details:
    - AI type (LLM / ML / Agentic)  
@@ -91,10 +91,25 @@ This tool is **rule-based, not generative AI**.
 
 ---
 
-## 🧪 Example Output
+## Example Output
 
-- Prompt Injection → Critical  
+- ### Scenario:
+- AI Type: LLM  
+- Exposure: Public  
+- Input Validation: No  
+- Output Filtering: No  
+- Sensitive Data: Yes  
+
+---
+
+### Findings:
+
 - Missing Input Validation → High  
-- Data Exposure Risk → High  
+- Missing Output Filtering → High  
+- Sensitive Data Exposure Risk → High  
 
-**Attack Chain Example:**
+---
+
+### Attack Chain (Triggered):
+
+**Chain: Untrusted Input → Unsafe Processing → Data Exposure**
